@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine Premium Perú</title>
+    <style>
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #e50914;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1920x600?text=Cine+Premium');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 30px;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar button {
+            padding: 8px 15px;
+            background-color: #ddd;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .filter-bar button.active {
+            background-color: #e50914;
+            color: white;
+        }
+
+        /* Movies Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        /* Movie Card */
+        .movie-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .movie-image-container {
+            position: relative;
+        }
+
+        .movie-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: #ccc;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .favorite-btn.favorite {
+            color: #e50914;
+            background: rgba(0,0,0,0.7);
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-info h3 {
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .category {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .details-btn {
+            display: block;
+            text-align: center;
+            background: #e50914;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .details-btn:hover {
+            background: #b2070f;
+        }
+
+        /* Movie Detail */
+        .movie-detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .movie-detail {
+            display: flex;
+            gap: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .detail-image-container {
+            position: relative;
+            flex: 0 0 300px;
+        }
+
+        .detail-image {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .detail-info {
+            flex: 1;
+        }
+
+        .detail-info h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .detail-meta span {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .description {
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #111;
+        }
+
+        /* Contact Form */
+        .contact-form-container {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .contact-form-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #b2070f;
+        }
+
+        /* Location */
+        .location-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .location-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .map {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .location-info {
+            margin-top: 20px;
+        }
+
+        .location-info p {
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            transition: color 0.3s;
+        }
+
+        .social-link:hover {
+            color: #e50914;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .movie-detail {
+                flex-direction: column;
+            }
+
+            .detail-image-container {
+                flex: 0 0 auto;
+                margin-bottom: 20px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .filter-bar {
+                justify-content: center;
+            }
+
+            .movies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form-container,
+            .location-container {
+                padding: 20px;
+            }
+        }
+
+        /* Hide/show sections for navigation */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-container">
+                <h1 class="logo">Cine Premium Perú</h1>
+                <nav class="nav">
+                    <a href="#" class="nav-link" onclick="showPage('home')">Inicio</a>
+                    <a href="#" class="nav-link" onclick="showPage('contact')">Contacto</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="hero">
+                    <h2>Las mejores películas en la experiencia premium</h2>
+                    <p>Próximamente en Lima</p>
+                </div>
+                
+                <div class="filter-bar">
+                    <button class="active" onclick="filterMovies('all')">Todas</button>
+                    <button onclick="filterMovies('action')">action</button>
+                    <button onclick="filterMovies('drama')">drama</button>
+                    <button onclick="filterMovies('historical')">historical</button>
+                    <button onclick="filterMovies('horror')">horror</button>
+                    <button onclick="filterMovies('fantasy')">fantasy</button>
+                    <button onclick="filterMovies('adventure')">adventure</button>
+                    <button onclick="filterMovies('superhero')">superhero</button>
+                    <button onclick="filterMovies('comedy')">comedy</button>
+                    <button onclick="filterMovies('western')">western</button>
+                    <button onclick="filterMovies('sci-fi')">sci-fi</button>
+                    <button onclick="filterMovies('mystery')">mystery</button>
+                    <button onclick="filterMovies('crime')">crime</button>
+                    <button onclick="filterMovies('design')">design</button>
+                    <button onclick="filterMovies('cyberpunk')">cyberpunk</button>
+                    <button onclick="filterMovies('time travel')">time travel</button>
+                    <button onclick="filterMovies('thriller')">thriller</button>
+                    
+
+
+
+
+                </div>
+                
+                <div class="movies-grid" id="movies-container">
+                    <!-- Movie cards will be inserted here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Movie Detail Page -->
+            <div id="movie-page" class="page">
+                <div class="movie-detail-container" id="movie-detail-container">
+                    <!-- Movie detail will be inserted here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Contact Page -->
+            <div id="contact-page" class="page">
+                <div class="contact-form-container">
+                    <h2>Contáctanos</h2>
+                    <form id="contact-form" class="contact-form" onsubmit="handleContactSubmit(event)">
+                        <div class="form-group">
+                            <label for="name">Nombre:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensaje:</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Enviar</button>
+                    </form>
+                </div>
+                <div class="location-container">
+                    <h2>Nuestra Ubicación</h2>
+                    <div class="map">
+                        <iframe
+                            title="Cine Premium Lima"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.965947369841!2d-77.0365839241645!3d-12.046865940922393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c5f619ee3ec7%3A0x14206cb9cc452e4a!2sLarcomar!5e0!3m2!1sen!2spe!4v1620000000000!5m2!1sen!2spe"
+                            width="100%"
+                            height="450"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                        ></iframe>
+                    </div>
+                    <div class="location-info">
+                        <p><strong>Dirección:</strong> Malecón de la Reserva 610, Miraflores, Lima</p>
+                        <p><strong>Horario:</strong> Lunes a Domingo: 10:00 - 23:00</p>
+                        <p><strong>Teléfono:</strong> (01) 555-1234</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-container">
+                <p>© 2023 Cine Premium Perú. Todos los derechos reservados.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Twitter</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Sample movie data
+        const moviesData = [
+            {
+                id: 1,
+                title: "A Working Man",
+                category: "drama",
+                description: "A man struggles to survive in a failing economy.",
+                price: "S/.29.99" ,
+                duration: "3h 2m",
+                author: "John Carter",
+                image: "tilina.jpg",
+                isFavorite: false
+            },
+            {
+                id: 2,
+                title: "In the Lost Lands",
+                category: "fantasy",
+                description: "Origen del famoso villano de DC Comics, el Joker.",
+                price: "S/.25.50" ,
+                duration: "2h 2m",
+                author: "John Carter",
+                image: "t2.jpg",
+                isFavorite: false
+            },
+            {
+                id: 3,
+                title: "A Minecraft Movie",
+                category: "adventure",
+                description: "Las aventuras de Woody y sus amigos juguetes continúan.",
+                price: "S/.19.99" ,
+                duration: "1h 40m",
+                author: "John Carter",
+                image: "t3.jpg",
+                isFavorite: false
+            },
+            {
+                id: 4,
+                title: "G20",
+                category: "action",
+                description: "Batman investiga la corrupción en Gotham City mientras persigue al Enigma.",
+                price: "S/.22.00" ,
+                duration: "2h 56m",
+                author: "John Carter",
+                image: "t4.jpg",
+                isFavorite: false
+            },
+            {
+                id: 5,
+                title: "Gunslingers",
+                category: "western",
+                description: "Un joven viaja al planeta más peligroso del universo para asegurar el futuro de su pueblo.",
+                price: "S/.27.00" ,
+                duration: "2h 35m",
+                author: "John Carter",
+                image: "t5.jpg",
+                isFavorite: false
+            },
+            {
+                id: 6,
+                title: "Novocaine",
+                category: "comedy",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/. 18.75" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t6.jpg",
+                isFavorite: false
+            },
+            {
+                id: 7,
+                title: "Brave New World",
+                category: "superhero",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.31.99" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t7.jpg",
+                isFavorite: false
+            },
+            {
+                id: 8,
+                title: "A Knight's War",
+                category: "historical",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.23.50" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t8.jpg",
+                isFavorite: false
+            },
+            {
+                id: 9,
+                title: "Home Sweet Home",
+                category: "horror",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.21.90" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t9.jpg",
+                isFavorite: false
+            },
+            {
+                id: 10,
+                title: "The Woman in the Yard",
+                category: "mystery",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.24.00" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t10.jpg",
+                isFavorite: false
+            },
+            {
+                id: 11,
+                title: "Digital Destiny",
+                category: "sci-fi",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.28.50" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t11.jpg",
+                isFavorite: false
+            },
+            {
+                id: 12,
+                title: "Neon Divide",
+                category: "cyberpunk",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.26.00" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t12.jpg",
+                isFavorite: false
+            },
+            {
+                id: 13,
+                title: "Echoes of Tomorrow",
+                category: "time travel",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.20.00" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t13.jpg",
+                isFavorite: false
+            },
+            {
+                id: 14,
+                title: "The Final Trial",
+                category: "fantasy",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.22.40" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t14.jpg",
+                isFavorite: false
+            },
+            {
+                id: 15,
+                title: "Urban Vengeance",
+                category: "thriller",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.30.99" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t15.jpg",
+                isFavorite: false
+            },
+            {
+                id: 16,
+                title: "Whispers in the Fog",
+                category: "suspense",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.19.85" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t16.jpg",
+                isFavorite: false
+            },
+            {
+                id: 17,
+                title: "Planet Omega",
+                category: "sci-fi",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.34.00" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t17.jpg",
+                isFavorite: false
+            },
+            {
+                id: 18,
+                title: "Crimson Rain",
+                category: "crime",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.23.25" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t18.jpg",
+                isFavorite: false
+            },
+            {
+                id: 19,
+                title: "The Forgotten Island",
+                category: "adventure",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.27.45" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t19.jpg",
+                isFavorite: false
+            },
+            {
+                id: 20,
+                title: "Design Thinking",
+                category: "design",
+                description: "Una familia pobre se infiltra en el hogar de una familia rica.",
+                price: "S/.32.25" ,
+                duration: "2h 12m",
+                author: "John Carter",
+                image: "t20.jpg",
+                isFavorite: false
+            }
+        ];
+
+        // Initialize the page with movies
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMovies(moviesData);
+        });
+
+        // Render movies to the page
+        function renderMovies(movies) {
+            const container = document.getElementById('movies-container');
+            container.innerHTML = '';
+
+            movies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'movie-card';
+                movieCard.innerHTML = `
+                    <div class="movie-image-container">
+                        <img src="${movie.image}" alt="${movie.title}" class="movie-image" />
+                        <button class="favorite-btn ${movie.isFavorite ? 'favorite' : ''}" onclick="toggleFavorite(${movie.id})">
+                            ♥
+                        </button>
+                    </div>
+                    <div class="movie-info">
+                        <h3>${movie.title}</h3>
+                        <p class="category">${movie.category}</p>
+                        <div class="movie-meta">
+                            <span class="price">💵 ${movie.price}</span>
+                            <span class="author">${movie.author}</span>
+                        </div>
+                        <a href="#" class="details-btn" onclick="showMovieDetail(${movie.id})">Ver detalles</a>
+                    </div>
+                `;
+                container.appendChild(movieCard);
+            });
+        }
+
+        // Filter movies by category
+        function filterMovies(category) {
+            // Update active button
+            const buttons = document.querySelectorAll('.filter-bar button');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === category || (category === 'all' && btn.textContent === 'Todas')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            if (category === 'all') {
+                renderMovies(moviesData);
+            } else {
+                const filteredMovies = moviesData.filter(movie => movie.category === category);
+                renderMovies(filteredMovies);
+            }
+        }
+
+        // Toggle favorite status
+        function toggleFavorite(id) {
+            const movie = moviesData.find(m => m.id === id);
+            if (movie) {
+                movie.isFavorite = !movie.isFavorite;
+                renderMovies(moviesData.filter(m => document.querySelector('.filter-bar button.active').textContent === 'Todas' || m.category === document.querySelector('.filter-bar button.active').textContent));
+            }
+        }
+
+        // Show movie detail
+        function showMovieDetail(id) {
+            const movie = moviesData.find(m => m.id === id);
+            if (movie) {
+                const container = document.getElementById('movie-detail-container');
+                container.innerHTML = `
+                    <div class="movie-detail">
+                        <div class="detail-image-container">
+                            <img src="${movie.image}" alt="${movie.title}" class="detail-image" />
+                            <button class="favorite-btn ${movie.isFavorite ? 'favorite' : ''}" onclick="toggleFavorite(${movie.id}); showMovieDetail(${movie.id})">
+                                ♥
+                            </button>
+                        </div>
+                        <div class="detail-info">
+                            <h1>${movie.title}</h1>
+                            <div class="detail-meta">
+                                <span class="category">${movie.category}</span>
+                                <span class="price">💵 ${movie.price}</span>
+                                <span class="duration">${movie.duration}</span>
+                                <span class="author">${movie.author}</span>
+                            </div>
+                            <p class="description">${movie.description}</p>
+                            <a href="#" class="back-btn" onclick="showPage('home')">Volver a la lista</a>
+                        </div>
+                    </div>
+                `;
+                showPage('movie');
+            }
+        }
+
+        // Handle contact form submission
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // In a real app, you would send this data to a server
+            console.log('Form submitted:', {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                message: formData.get('message')
+            });
+
+            alert('Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.');
+            form.reset();
+        }
+
+        // Show/hide pages
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show the requested page
+            document.getElementById(`${pageName}-page`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
